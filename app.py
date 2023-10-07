@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request, render_template, redirect, url_for
+import matplotlib.pyplot as plt
 import openai
 import json
 import os
@@ -32,11 +33,41 @@ def get_tasks(number):
     a = response['choices'][0]['message']['content']
     return json.loads(a)
 
-tasks = {}
-tasks = get_tasks(10)
+def complete_tasks(task_desc): # pass in by task description from front end
+        global total_point
+        keys_to_delete = [key for key, value in tasks.items() if value == task_desc]
+
+        # Delete the items based on the keys in the list
+        for key in keys_to_delete:
+            total_point += int(key)
+            del tasks[key]
+        return
+
+def graph(daily_points):
+    days = list(daily_points.keys())
+    points = list(daily_points.values())
+    plt.plot(days, points, label='Points', color='blue', marker='o')
+
+    # Add labels and a legend
+    plt.xlabel('Weekly')
+    plt.ylabel('Points')
+    plt.title('Scatter Plot of Points')
+    plt.legend()
+
+    # Save the plot
+    plt.savefig('plots/plot.png')
+    # Show the plot
+    # plt.show()
+
 total_point = 0
+tasks = {}
+daily_points = { 'Sunday': 0, 'Monday': 0, 'Tuesday': 10, 'Wednesday': 5, 'Thursday': 7, 'Friday': 1, 'Saturday': 2 }
+
+tasks = get_tasks(10)
+complete_tasks(tasks['10'])
+graph(daily_points)
+
 
 @app.route("/")
 def home():
-    d = get_tasks(5)
-    return render_template("home.html", data = d)
+    return render_template("home.html", data = tasks, points = total_point)

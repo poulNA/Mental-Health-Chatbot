@@ -1,10 +1,17 @@
 <html>
     <body>
         <p>{{data}}</p>
-       
+
+        <h1>Weekly Score</h1>
+        <img src="..\plots\plot.png" alt="Line Plot">
+            
             {% for key, value in data.items() %}
                 <h1>Key: {{key}}</h1>
                 <h2>Value: {{value}}</h2>
             {% endfor %}
+
+            <h1>Daily Points</h1>
+            {{points}}
+
     </body>
 </html>
