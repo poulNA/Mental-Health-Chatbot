@@ -11,8 +11,6 @@ app = Flask(__name__)
 key = os.getenv('KEY')
 openai.api_key = key
 
-
-
 self_prompt = "You are a helpful assistant that provides detailed advice."
 
 def get_response(prompt):
@@ -33,10 +31,19 @@ def get_tasks(number):
     return json.loads(a)
 
 tasks = {}
-tasks = get_tasks(10)
+#tasks = get_tasks(10)
 total_point = 0
 
 @app.route("/")
 def home():
-    d = get_tasks(5)
+    #d = get_tasks(5)
+    d = {
+        '1': 'Smile at Stranger',
+        '2': 'Hold the door open for someone',
+        '3': 'Send a thoughtful message to a friend or family member',
+        '5': 'Volunteer at a local charity',
+        '10': 'Take a day off to focus on self-care'
+    }
     return render_template("home.html", data = d)
+
+

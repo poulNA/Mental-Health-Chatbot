@@ -1,10 +1,46 @@
 <html>
-    <body>
-        <p>{{data}}</p>
-       
-            {% for key, value in data.items() %}
-                <h1>Key: {{key}}</h1>
-                <h2>Value: {{value}}</h2>
-            {% endfor %}
+    <head>
+        <title>
+            Mental Health App
+        </title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body style= "background-color: 	#ffedbf;">
+        <div style= "background-color: 	#ff7251;">
+            <nav class="navbar navbar-light pb-2">
+                <a class="navbar-brand font-weight-bold" href="#" style="color: #8a004c;">Mental Health App</a>
+            </nav>
+        </div>
+        <div class = "container mt-2">
+            <h1>Tasks</h1>
+            <p>Welcome to the Daily Task Manager, complete tasks to add points to your daily counter!</p>
+            <div class="list-group p-2 mb-2" style = "background-color: 	#ba8ea0;"> 
+                    {% for key, value in data.items() %}
+                    <button class = "shadow card m-2  " style= "background-color: 	#ffe9b0;">
+                            <div class = "card-body" style="width: 1050px;">
+                                <div class = "d-flex justify-content-between ">
+                                    <div class = "rounded-circle" style="background-color: #ffffff ;width: 50px; height: 50px;">
+                                        <h6> <br>{{key}}</h6>
+                                    </div>
+                                    <div>
+                                        <h6>
+                                            <br>
+                                            &emsp;{{value}}
+                                        </h6>
+                                    </div>
+                                        
+                                        <div type = "button submit" onclick = "window.location.href = '{{ url_for( 'test' ,  lol = value ) }}';" class="btn btn-success" style="margin-left: auto;" >
+                                            <p>Complete</p>
+                                        </div>
+
+                                </div>
+
+                            </div>
+                    </button>
+                    {% endfor %}
+
+            </div>
+
+        </div>
     </body>
 </html>
