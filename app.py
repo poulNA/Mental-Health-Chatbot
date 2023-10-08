@@ -1,12 +1,15 @@
 from flask import Flask, jsonify, request, render_template, redirect, url_for
+import matplotlib.pyplot as plt
 import openai
 import json
 import os
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
 app = Flask(__name__)
+
 
 key = os.getenv('KEY')
 openai.api_key = key
@@ -30,20 +33,45 @@ def get_tasks(number):
     a = response['choices'][0]['message']['content']
     return json.loads(a)
 
+completed = {}
 tasks = {}
-#tasks = get_tasks(10)
-total_point = 0
+daily_points = { 'Sunday': 0, 'Monday': 0, 'Tuesday': 10, 'Wednesday': 5, 'Thursday': 7, 'Friday': 1, 'Saturday': 2 }
+
+tasks = get_tasks(10)
+
+
+@app.route("/<task_desc>")
+def complete_tasks(task_desc): # pass in by task description from front end
+        keys_to_delete = [(key, value) for key, value in tasks.items() if value == task_desc]
+
+        # Delete the items based on the keys in the list
+        for (key, value) in keys_to_delete:
+            completed[key] = value
+            del tasks[key]
+        return render_template("home.html", data = tasks, points = get_points())
+
+def graph(daily_points):
+    days = list(daily_points.keys())
+    points = list(daily_points.values())
+    plt.plot(days, points, label='Points', color='blue', marker='o')
+
+    # Add labels and a legend
+    plt.xlabel('Weekly')
+    plt.ylabel('Points')
+    plt.title('Scatter Plot of Points')
+    plt.legend()
+
+    # Save the plot
+    plt.savefig('plots/plot.png')
+    # Show the plot
+    # plt.show()
+
+def get_points():
+    p = 0
+    for key in completed.keys():
+        p += int(key)
+    return p
 
 @app.route("/")
 def home():
-    #d = get_tasks(5)
-    d = {
-        '1': 'Smile at Stranger',
-        '2': 'Hold the door open for someone',
-        '3': 'Send a thoughtful message to a friend or family member',
-        '5': 'Volunteer at a local charity',
-        '10': 'Take a day off to focus on self-care'
-    }
-    return render_template("home.html", data = d)
-
-
+    return render_template("home.html", data = tasks, points = get_points())
